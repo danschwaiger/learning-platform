@@ -1,0 +1,1 @@
+{\n  "name": "learning-platform",\n  "version": "1.0.0",\n  "description": "A simple Express server for flashcard and quiz functionality",\n  "main": "index.js",\n  "scripts": {\n    "start": "node index.js"\n  },\n  "dependencies": {\n    "express": "^4.17.1",\n    "cors": "^2.8.5",\n    "body-parser": "^1.19.0",\n    "uuid": "^8.3.2"\n  }\n}
