@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>📚 Learning Platform</h1>
+            <p>Master new skills with flashcards and quizzes</p>
+        </header>
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="home">🏠 Home</button>
+            <button class="tab-btn" data-tab="flashcards">🎴 Flashcards</button>
+            <button class="tab-btn" data-tab="quizzes">❓ Quizzes</button>
+        </nav>
+        <!-- Home Tab -->
+        <div id="home" class="tab-content active">
+            <div class="home-content">
+                <h2>Welcome to Learning Platform</h2>
+                <p>A simple yet powerful tool to enhance your learning journey.</p>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <h3>🎴 Flashcards</h3>
+                        <p>Create and study custom flashcard decks. Track your progress and improve your memory.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>❓ Quizzes</h3>
+                        <p>Test your knowledge with multiple-choice quizzes. Get instant feedback and track scores.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📊 Results</h3>
+                        <p>Export your progress data as JSON for analysis and record-keeping.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📁 File Upload</h3>
+                        <p>Upload your own flashcards and quizzes from JSON files.</p>
+                    </div>
+                </div>
+                <div class="quick-start">
+                    <h3>Getting Started</h3>
+                    <ol>
+                        <li>Click on "Flashcards" or "Quizzes" tab</li>
+                        <li>Create a new deck/quiz or upload an existing one</li>
+                        <li>Study or take a quiz</li>
+                        <li>Download your results as JSON</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!-- Flashcards Tab -->
+        <div id="flashcards" class="tab-content">
+            <div class="tab-header">
+                <h2>📚 Flashcard Decks</h2>
+                <div class="button-group">
+                    <button id="createDeckBtn" class="btn btn-primary">+ Create Deck</button>
+                    <button id="uploadDeckBtn" class="btn btn-secondary">⬆ Upload Deck</button>
+                </div>
+            </div>
+            <div id="flashcardsList" class="cards-grid"></div>
+        </div>
+        <!-- Quizzes Tab -->
+        <div id="quizzes" class="tab-content">
+            <div class="tab-header">
+                <h2>❓ Quizzes</h2>
+                <div class="button-group">
+                    <button id="createQuizBtn" class="btn btn-primary">+ Create Quiz</button>
+                    <button id="uploadQuizBtn" class="btn btn-secondary">⬆ Upload Quiz</button>
+                </div>
+            </div>
+            <div id="quizzesList" class="cards-grid"></div>
+        </div>
+    </div>
+    <!-- Create Deck Modal -->
+    <div id="createDeckModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create Flashcard Deck</h2>
+            <input type="text" id="deckName" placeholder="Deck name" class="input">
+            <div id="cardsContainer"></div>
+            <button id="addCardBtn" class="btn btn-secondary">+ Add Card</button>
+            <button id="saveDeckBtn" class="btn btn-primary">Save Deck</button>
+        </div>
+    </div>
+    <!-- Upload Deck Modal -->
+    <div id="uploadDeckModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Upload Flashcard Deck</h2>
+            <input type="file" id="uploadDeckFile" accept=".json" class="input">
+            <button id="uploadDeckSubmitBtn" class="btn btn-primary">Upload</button>
+        </div>
+    </div>
+    <!-- Study Deck Modal -->
+    <div id="studyDeckModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="studyTitle"></h2>
+            <div class="study-progress">
+                <p>Card <span id="currentCard">1</span> of <span id="totalCards">0</span></p>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </div>
+            <div id="cardDisplay" class="card-display">
+                <div class="card" id="studyCard">
+                    <p id="cardContent"></p>
+                </div>
+            </div>
+            <div class="study-controls">
+                <button id="prevCardBtn" class="btn btn-secondary">← Previous</button>
+                <button id="nextCardBtn" class="btn btn-secondary">Next →</button>
+            </div>
+            <button id="finishStudyBtn" class="btn btn-primary">Finish Study Session</button>
+        </div>
+    </div>
+    <!-- Study Results Modal -->
+    <div id="studyResultsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Study Session Complete! 🎉</h2>
+            <div class="results">
+                <p><strong>Completed:</strong> <span id="completedCount">0</span> cards</p>
+                <p><strong>Time Spent:</strong> <span id="timeSpent">0</span>s</p>
+            </div>
+            <button id="downloadStudyResultBtn" class="btn btn-secondary">📥 Download Results</button>
+            <button id="closeResultsBtn" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+    <!-- Create Quiz Modal -->
+    <div id="createQuizModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create Quiz</h2>
+            <input type="text" id="quizTitle" placeholder="Quiz title" class="input">
+            <input type="text" id="quizDescription" placeholder="Quiz description" class="input">
+            <div id="questionsContainer"></div>
+            <button id="addQuestionBtn" class="btn btn-secondary">+ Add Question</button>
+            <button id="saveQuizBtn" class="btn btn-primary">Save Quiz</button>
+        </div>
+    </div>
+    <!-- Upload Quiz Modal -->
+    <div id="uploadQuizModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Upload Quiz</h2>
+            <input type="file" id="uploadQuizFile" accept=".json" class="input">
+            <button id="uploadQuizSubmitBtn" class="btn btn-primary">Upload</button>
+        </div>
+    </div>
+    <!-- Take Quiz Modal -->
+    <div id="takeQuizModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="quizTakeTitle"></h2>
+            <div class="quiz-progress">
+                <p>Question <span id="currentQuestion">1</span> of <span id="totalQuestions">0</span></p>
+                <div class="progress-bar">
+                    <div id="quizProgressFill" class="progress-fill"></div>
+                </div>
+            </div>
+            <div id="questionDisplay" class="question-display">
+                <p id="questionText"></p>
+                <div id="optionsContainer" class="options"></div>
+            </div>
+            <div class="quiz-controls">
+                <button id="prevQuestionBtn" class="btn btn-secondary">← Previous</button>
+                <button id="nextQuestionBtn" class="btn btn-secondary">Next →</button>
+            </div>
+            <button id="submitQuizBtn" class="btn btn-primary">Submit Quiz</button>
+        </div>
+    </div>
+    <!-- Quiz Results Modal -->
+    <div id="quizResultsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Quiz Results 📊</h2>
+            <div class="results">
+                <p><strong>Score:</strong> <span id="quizScore">0</span> / <span id="quizTotal">0</span></p>
+                <p><strong>Percentage:</strong> <span id="quizPercentage">0</span>%</p>
+                <div id="detailedResults"></div>
+            </div>
+            <button id="downloadQuizResultBtn" class="btn btn-secondary">📥 Download Results</button>
+            <button id="closeQuizResultsBtn" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+    <!-- Hidden file inputs -->
+    <input type="file" id="hiddenUploadDeck" accept=".json" style="display:none;">
+    <input type="file" id="hiddenUploadQuiz" accept=".json" style="display:none;">
+    <script src="app.js"></script>
+</body>
+</html>
